@@ -1,33 +1,32 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL;
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 // ─── Interfaces ──────────────────────────────────────────────────────────────
 
 export interface ContactFormData {
   firstName: string;
-  lastName:  string;
-  email:     string;
-  phone:     string;
+  lastName: string;
+  email: string;
+  phone: string;
   inquiryType: string;
-  message:   string;
+  message: string;
   captchaVerified: boolean;
 }
 
 export interface TalentNetworkData {
-  firstName:    string;
-  lastName:     string;
-  email:        string;
-  phone:        string;
-  location:     string;
-  jobCategory:  string;
-  experience:   string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  location: string;
+  jobCategory: string;
+  experience: string;
   availability: string;
 }
 
 export interface ApiResponse<T = any> {
   success: boolean;
   message: string;
-  data?:   T;
+  data?: T;
   errors?: Array<{ field: string; message: string }>;
 }
 
@@ -36,12 +35,17 @@ export interface ApiResponse<T = any> {
 class ApiService {
   private token: string | null = null;
 
-  setToken(t: string | null) { this.token = t; }
-  getToken()                 { return this.token; }
+  setToken(t: string | null) {
+    this.token = t;
+  }
+
+  getToken() {
+    return this.token;
+  }
 
   private async makeRequest<T>(
     endpoint: string,
-    options: RequestInit = {},
+    options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
     try {
       const headers: Record<string, string> = {
@@ -61,7 +65,10 @@ class ApiService {
       return data as ApiResponse<T>;
     } catch (error) {
       console.error('API request failed:', error);
-      return { success: false, message: 'Network error. Please check your connection.' };
+      return {
+        success: false,
+        message: 'Network error. Please check your connection.',
+      };
     }
   }
 
@@ -83,7 +90,7 @@ class ApiService {
   }
 
   submitTalentNetwork(data: TalentNetworkData) {
-    return this.makeRequest('/api/talent-network', {
+    return this.makeRequest('/api/careers/talent-network', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -107,14 +114,19 @@ class ApiService {
   // ── Auth ────────────────────────────────────────────────────────────────
 
   async adminLogin(email: string, password: string) {
-    const res = await this.makeRequest<{ token: string; user: any }>('/api/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-    });
+    const res = await this.makeRequest<{ token: string; user: any }>(
+      '/api/auth/login',
+      {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      }
+    );
+
     if (res.success && res.data?.token) {
       this.setToken(res.data.token);
       localStorage.setItem('adminToken', res.data.token);
     }
+
     return res;
   }
 
@@ -181,33 +193,86 @@ class ApiService {
     });
   }
 
-  // ── NEW ─────────────────────────────────────────────────────────────────
   deleteResume(id: number) {
-    return this.makeRequest(`/api/admin/resumes/${id}`, { method: 'DELETE' });
+    return this.makeRequest(`/api/admin/resumes/${id}`, {
+      method: 'DELETE',
+    });
   }
-  // ────────────────────────────────────────────────────────────────────────
 
   // Clients
-  getClients()                    { return this.makeRequest<any[]>('/api/admin/clients'); }
-  createClient(data: any)         { return this.makeRequest('/api/admin/clients',        { method: 'POST',   body: JSON.stringify(data) }); }
-  updateClient(id: number, d: any){ return this.makeRequest(`/api/admin/clients/${id}`,  { method: 'PUT',    body: JSON.stringify(d)    }); }
-  deleteClient(id: number)        { return this.makeRequest(`/api/admin/clients/${id}`,  { method: 'DELETE'                             }); }
+  getClients() {
+    return this.makeRequest<any[]>('/api/admin/clients');
+  }
+
+  createClient(data: any) {
+    return this.makeRequest('/api/admin/clients', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  updateClient(id: number, data: any) {
+    return this.makeRequest(`/api/admin/clients/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  deleteClient(id: number) {
+    return this.makeRequest(`/api/admin/clients/${id}`, {
+      method: 'DELETE',
+    });
+  }
 
   // Projects
-  getProjects()                    { return this.makeRequest<any[]>('/api/admin/projects'); }
-  createProject(data: any)         { return this.makeRequest('/api/admin/projects',         { method: 'POST',   body: JSON.stringify(data) }); }
-  updateProject(id: number, d: any){ return this.makeRequest(`/api/admin/projects/${id}`,   { method: 'PUT',    body: JSON.stringify(d)    }); }
-  deleteProject(id: number)        { return this.makeRequest(`/api/admin/projects/${id}`,   { method: 'DELETE'                             }); }
+  getProjects() {
+    return this.makeRequest<any[]>('/api/admin/projects');
+  }
+
+  createProject(data: any) {
+    return this.makeRequest('/api/admin/projects', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  updateProject(id: number, data: any) {
+    return this.makeRequest(`/api/admin/projects/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  deleteProject(id: number) {
+    return this.makeRequest(`/api/admin/projects/${id}`, {
+      method: 'DELETE',
+    });
+  }
 
   // Admin job management
-  createJob(data: any)          { return this.makeRequest('/api/careers/jobs',        { method: 'POST',   body: JSON.stringify(data) }); }
-  updateJob(id: number, d: any) { return this.makeRequest(`/api/careers/jobs/${id}`,  { method: 'PUT',    body: JSON.stringify(d)    }); }
-  deleteJob(id: number)         { return this.makeRequest(`/api/careers/jobs/${id}`,  { method: 'DELETE'                             }); }
+  createJob(data: any) {
+    return this.makeRequest('/api/careers/jobs', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  updateJob(id: number, data: any) {
+    return this.makeRequest(`/api/careers/jobs/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  deleteJob(id: number) {
+    return this.makeRequest(`/api/careers/jobs/${id}`, {
+      method: 'DELETE',
+    });
+  }
 }
 
 export const apiService = new ApiService();
 
-// Restore token from storage on page load
 const savedToken = localStorage.getItem('adminToken');
 if (savedToken) apiService.setToken(savedToken);
 
