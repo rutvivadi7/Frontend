@@ -16,10 +16,10 @@ const AboutUs: React.FC = () => {
             alt="About Us"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-black/30"></div>
+          <<div className="absolute inset-0 bg-gray-400/60"></div>
         </div>
-        <div className="relative z-10 text-white px-8 sm:px-12 lg:px-20 xl:px-28">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold">Connection With Intention</h1>
+        <div className="relative z-10 text-white mt-16 px-8 sm:px-12 lg:px-20 xl:px-28">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold">Connection with Intention</h1>
         </div>
       </section>
 
@@ -50,7 +50,7 @@ const AboutUs: React.FC = () => {
           </div>
           <div className="relative">
             <img
-              src={IMAGES.GALLERY.CONSTRUCTION_4}
+              src={images/gallery/companyprofilebg.png}
               alt="About Us"
               className="w-full h-[480px] object-cover rounded-2xl shadow-xl"
             />
