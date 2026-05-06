@@ -48,13 +48,6 @@ const AboutUs: React.FC = () => {
               these services to our customers.
             </p>
           </div>
-          <div className="relative">
-            <img
-              src={images/gallery/companyprofilebg.png}
-              alt="About Us"
-              className="w-full h-[480px] object-cover rounded-2xl shadow-xl"
-            />
-          </div>
         </div>
       </section>
 
