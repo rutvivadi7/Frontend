@@ -1,17 +1,7 @@
-/** @jsxRuntime classic */
-/** @jsx React.createElement */
 import React from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { IMAGES } from '../constants/images';
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      [elemName: string]: any;
-    }
-  }
-}
 
 const AboutUs: React.FC = () => {
   return (
@@ -22,7 +12,7 @@ const AboutUs: React.FC = () => {
       <section className="relative h-[50vh] flex items-end justify-start pb-10">
         <div className="absolute inset-0">
           <img
-            src={"images/gallery/jkc60.png"}
+            src={"images/gallery/aboutus.jpeg"}
             alt="About Us"
             className="w-full h-full object-cover"
           />
@@ -60,7 +50,7 @@ const AboutUs: React.FC = () => {
           </div>
           <div className="relative">
             <img
-              src={images/gallery/aboutus.jpeg}
+              src={IMAGES.GALLERY.CONSTRUCTION_4}
               alt="About Us"
               className="w-full h-[480px] object-cover rounded-2xl shadow-xl"
             />
