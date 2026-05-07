@@ -3,10 +3,10 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { IMAGES } from '../constants/images';
 
-const AboutUs: React.FC = () => {
+const AboutUs = () => {
   return (
     <div className="min-h-screen bg-white">
-      <Header isTransparent={true} />
+      <header isTransparent={true} />
 
       {/* Hero Section */}
       <section className="relative h-[50vh] flex items-end justify-start pb-10">
@@ -16,7 +16,7 @@ const AboutUs: React.FC = () => {
             alt="About Us"
             className="w-full h-full object-cover"
           />
-          <<div className="absolute inset-0 bg-gray-400/60"></div>
+          <div className="absolute inset-0 bg-gray-400/60"></div>
         </div>
         <div className="relative z-10 text-white mt-16 px-8 sm:px-12 lg:px-20 xl:px-28">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold">Connection with Intention</h1>
@@ -47,6 +47,13 @@ const AboutUs: React.FC = () => {
               utilities. JKC supplies the labor, tools, and equipment necessary to provide
               these services to our customers.
             </p>
+          </div>
+          <div className="relative h-[400px] rounded-lg overflow-hidden shadow-lg">
+            <img
+              src="images/gallery/jkc60.png"
+              alt="About JKC"
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
       </section>
