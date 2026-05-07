@@ -299,6 +299,20 @@ const Admin: React.FC = () => {
     if (result.success) setTalents(prev => prev.map(t => t.id === id ? { ...t, status: status as any } : t));
   };
 
+  const handleDeleteContact = async (id: number) => {
+    if (!window.confirm('Delete this contact submission?')) return;
+    const result = await apiService.deleteContact(id);
+    if (result.success) setContacts(prev => prev.filter(c => c.id !== id));
+    else alert(result.message || 'Failed to delete contact.');
+  };
+
+  const handleDeleteTalent = async (id: number) => {
+    if (!window.confirm('Delete this talent submission?')) return;
+    const result = await apiService.deleteTalent(id);
+    if (result.success) setTalents(prev => prev.filter(t => t.id !== id));
+    else alert(result.message || 'Failed to delete talent.');
+  };
+
   const getStatusColor = (status: string) => {
     const map: Record<string, string> = {
       'Active':      'bg-green-100 text-green-800',
@@ -520,6 +534,10 @@ const Admin: React.FC = () => {
                         <option value="replied">Replied</option>
                         <option value="archived">Archived</option>
                       </select>
+                      <button onClick={() => handleDeleteContact(c.id)}
+                        className="text-red-400 hover:text-red-600 transition-colors" title="Delete">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -539,14 +557,14 @@ const Admin: React.FC = () => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    {['Name', 'Contact', 'Category', 'Experience', 'Availability', 'Status', 'Date'].map(h => (
+                    {['Name', 'Contact', 'Category', 'Experience', 'Availability', 'Status', 'Date', 'Actions'].map(h => (
                       <th key={h} className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {talents.length === 0 ? (
-                    <tr><td colSpan={7} className="px-6 py-10 text-center text-gray-500">No talent network submissions yet.</td></tr>
+                    <tr><td colSpan={8} className="px-6 py-10 text-center text-gray-500">No talent network submissions yet.</td></tr>
                   ) : talents.map(t => (
                     <tr key={t.id} className="hover:bg-gray-50">
                       <td className="px-4 py-3 whitespace-nowrap">
@@ -571,6 +589,13 @@ const Admin: React.FC = () => {
                         </select>
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500">{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <button onClick={() => handleDeleteTalent(t.id)}
+                          className="text-red-400 hover:text-red-600 transition-colors" title="Delete">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
                     </tr>
                   ))}
                 </tbody>
@@ -616,26 +641,43 @@ const Admin: React.FC = () => {
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{r.position}</td>
                       <td className="px-4 py-3 whitespace-nowrap">
-                        <button
-                          onClick={async () => {
-                            const token = localStorage.getItem('adminToken');
-                            const apiUrl = (import.meta.env as Record<string, string>).VITE_API_URL;
-                            const res = await fetch(`${apiUrl}/upload/files/${r.file_name}`, {
-                              headers: { Authorization: `Bearer ${token}` }
-                            });
-                            const blob = await res.blob();
-                            const url = URL.createObjectURL(blob);
-                            const a = document.createElement('a');
-                            a.href = url;
-                            a.download = r.original_name;
-                            a.click();
-                            URL.revokeObjectURL(url);
-                          }}
-                          className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center gap-1"
-                        >
-                          <FileText className="w-4 h-4 flex-shrink-0" />
-                          <span className="max-w-[180px] truncate">{r.original_name}</span>
-                        </button>
+                        <div className="flex items-center gap-2">
+                          {/* File name + View (opens inline in new tab) */}
+                          <button
+                            onClick={() => {
+                              const token = localStorage.getItem('adminToken');
+                              const apiUrl = (import.meta.env as Record<string, string>).VITE_API_URL;
+                              window.open(`${apiUrl}/upload/files/${r.file_name}/view?token=${token}`, '_blank');
+                            }}
+                            className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center gap-1"
+                            title="View file"
+                          >
+                            <FileText className="w-4 h-4 flex-shrink-0" />
+                            <span className="max-w-[140px] truncate">{r.original_name}</span>
+                          </button>
+
+                          {/* Download button */}
+                          <button
+                            onClick={async () => {
+                              const token = localStorage.getItem('adminToken');
+                              const apiUrl = (import.meta.env as Record<string, string>).VITE_API_URL;
+                              const res = await fetch(`${apiUrl}/upload/files/${r.file_name}/download`, {
+                                headers: { Authorization: `Bearer ${token}` },
+                              });
+                              const blob = await res.blob();
+                              const url = URL.createObjectURL(blob);
+                              const a = document.createElement('a');
+                              a.href = url;
+                              a.download = r.original_name;
+                              a.click();
+                              URL.revokeObjectURL(url);
+                            }}
+                            className="text-gray-400 hover:text-indigo-600 transition-colors"
+                            title="Download file"
+                          >
+                            ⬇
+                          </button>
+                        </div>
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-xs text-gray-500">
                         {(r.file_size / 1024).toFixed(0)} KB

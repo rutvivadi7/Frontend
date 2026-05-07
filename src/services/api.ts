@@ -270,7 +270,11 @@ class ApiService {
     });
   }
 }
+deleteContact: (id: number) =>
+  fetchApi(`/admin/contacts/${id}`, { method: 'DELETE' }),
 
+deleteTalent: (id: number) =>
+  fetchApi(`/admin/talents/${id}`, { method: 'DELETE' }),
 export const apiService = new ApiService();
 
 const savedToken = localStorage.getItem('adminToken');
