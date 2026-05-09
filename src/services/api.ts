@@ -269,13 +269,19 @@ class ApiService {
       method: 'DELETE',
     });
   }
-}
-deleteContact: (id: number) =>
-  fetchApi(`/admin/contacts/${id}`, { method: 'DELETE' }),
 
-deleteTalent: (id: number) =>
-  fetchApi(`/admin/talents/${id}`, { method: 'DELETE' }),
-export const apiService = new ApiService();
+  deleteContact(id: number) {
+    return this.makeRequest(`/api/admin/contact-submissions/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  deleteTalent(id: number) {
+    return this.makeRequest(`/api/admin/talent-network/${id}`, {
+      method: 'DELETE',
+    });
+  }
+}
 
 const savedToken = localStorage.getItem('adminToken');
 if (savedToken) apiService.setToken(savedToken);
