@@ -646,7 +646,7 @@ const Admin: React.FC = () => {
                             onClick={() => {
                               const token = localStorage.getItem('adminToken');
                               const apiUrl = (import.meta.env as Record<string, string>).VITE_API_URL;
-                              window.open(`${apiUrl}/upload/files/${r.file_name}/view?token=${token}`, '_blank');
+                              window.open(`${apiUrl}/api/upload/files/${r.file_name}/view?token=${token}`, '_blank');
                             }}
                             className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center gap-1"
                             title="View file"
@@ -660,7 +660,7 @@ const Admin: React.FC = () => {
                             onClick={async () => {
                               const token = localStorage.getItem('adminToken');
                               const apiUrl = (import.meta.env as Record<string, string>).VITE_API_URL;
-                              const res = await fetch(`${apiUrl}/upload/files/${r.file_name}/download`, {
+                              const res = await fetch(`${apiUrl}/api/upload/files/${r.file_name}/download`, {
                                 headers: { Authorization: `Bearer ${token}` },
                               });
                               const blob = await res.blob();
