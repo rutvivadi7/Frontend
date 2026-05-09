@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { IMAGES } from '../constants/images';
-import { apiService } from '../services/api';
+import apiService from '../services/api';
 import ServicesSection from '../components/ServicesSection';
 
 const ContactUs: React.FC = () => {

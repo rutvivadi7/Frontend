@@ -283,7 +283,10 @@ class ApiService {
   }
 }
 
+const apiService = new ApiService();
+
 const savedToken = localStorage.getItem('adminToken');
 if (savedToken) apiService.setToken(savedToken);
 
+export { apiService };
 export default apiService;
