@@ -5,11 +5,6 @@ import {
 } from 'lucide-react';
 import apiService from '../services/api';
 
-declare global {
-  interface ImportMeta {
-    readonly env: Record<string, string>;
-  }
-}
 
 interface ResumeUpload {
   id: number;
